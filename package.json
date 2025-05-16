@@ -2,7 +2,7 @@
   "name": "journal-app",
   "version": "1.0.0",
   "description": "My assignment project for Toddle",
-  "main": "index.js",
+  "main": "server.js",
   "engines": {
     "node": ">=16.0.0"
   },
