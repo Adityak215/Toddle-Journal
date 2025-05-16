@@ -17,7 +17,7 @@
     "test:integration": "jest --testPathPattern=test/integration",
     "lint": "eslint .",
     "build": "npm install",
-    "postinstall": "npx sequelize-cli db:migrate"
+    "postinstall": "NODE_ENV=production npx sequelize-cli db:migrate"
   },
   "author": "Adtiya Kumar",
   "license": "ISC",
@@ -41,6 +41,7 @@
   "devDependencies": {
     "jest": "^29.7.0",
     "nodemon": "^3.1.10",
+    "sequelize-cli": "^6.6.3",
     "supertest": "^7.1.1"
   }
 }
