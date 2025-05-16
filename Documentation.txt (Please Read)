@@ -3,6 +3,7 @@ This is the document entailing all the quirks and personal information regarding
 - URL - https://toddle-journal-4ei4.onrender.com/api
 - DB - postgre on render as well (free tier, limited capacity). 
 - Render’s free PostgreSQL tier may sleep after inactivity.  
+- Database information is provided in "ER-data.txt" and "ER-Diagram.png" is also contained in zip.
 
 - Althought stated in the instructions not to put the code on github, to deploy on render this repo has been created as a private repository 
     on my profile and then further connected and deployed on render.
