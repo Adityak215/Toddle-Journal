@@ -28,6 +28,7 @@ const User = sequelize.define('User', {
   }
 }, {
   tableName: 'users',
+  underscored: true,
   timestamps: true,
   createdAt: 'created_at',
   updatedAt: 'updated_at'

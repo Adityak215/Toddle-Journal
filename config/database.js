@@ -3,13 +3,18 @@ require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const path = require('path');
 
+// Use DATABASE_URL for production (Render) or construct connection string for local development
 const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
+  process.env.DATABASE_URL || 
+  `mysql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
   {
-    host: process.env.DB_HOST,
-    dialect: 'mysql',
+    dialect: process.env.NODE_ENV === 'production' ? 'postgres' : 'mysql',
+    dialectOptions: process.env.NODE_ENV === 'production' ? {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    } : {},
     logging: process.env.NODE_ENV === 'development' ? console.log : false,
     pool: {
       max: 5,
