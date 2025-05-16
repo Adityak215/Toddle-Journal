@@ -1,0 +1,61 @@
+This is the document entailing all the quirks and personal information regarding my (Aditya Kumar's) assignment project for Toddle.
+
+- URL - https://toddle-journal-4ei4.onrender.com/api
+- DB - postgre on render as well (free tier, limited capacity). 
+- Render’s free PostgreSQL tier may sleep after inactivity.  
+
+- Althought stated in the instructions not to put the code on github, to deploy on render this repo has been created as a private repository 
+    on my profile and then further connected and deployed on render.
+
+- Already existing Users - (common password for all ids "password123") 
+    liveteacher1
+    livestudent1
+
+- Journal ids 1-13 have been created and manipulated extensively already to test the live database.
+- Ids for all entities (journals, students, teachers) are allotted in order of creation, 
+    simply integer based values for now, deletion does not reset the counter. 
+- CRUD operations along with Publish operation can be performed on journals only for the time being.
+- Details of teachersand students can not be modified or deleted at the moment but the functionality can be added.
+
+- Postman environment and collection are provided in the zip file for testing.
+- Environment contains the variables required for testing, collection has all the necessary endpoint tests.
+- Currently requests are set to create "liveteacher2" and "livestudent2" and further login and other functions can be performed with those.
+- The request for "Upload Attachment" needs to be run manually as a file needs to be attached to the body in order to function appropriately.
+
+- Aside from these the server and DB should be up and running without issues, as per my testing till now all API endpoints and requests are functional.
+- Testing on postman (especially document upload) will require manual intervention.
+- Teacher "Register and login" need to be the first requests performed in order for environment variables to obtain values for other requests to funciton.
+- Post register and login, to perform the remaining operations, "Create journal" request needs to precede the rest.
+- As of now the requests in collection are arranged in the order they can function properly.
+- After deletion of a journal, new needs to be created first, as per the setup of the postman request, 
+    all operations are automatically perfomed on the latest journal.
+- journalId environment variable is used in the requests which maintains the latest journal and is updated at journal creation.
+
+- This project is a complete original creation from scratch, albiet with some help from ai assistants to make sure the code is up to the mark.
+- Extensive amount of comments have been added to maintain readability of the code as well.
+- Everything is created in a modular way from the folder structure to all components being clearly specified and seperated.
+
+Folder and File structure - 
+Journal-App/
+├── config/
+├── controllers/
+├── db/
+│   ├── migrations/
+│   ├── models/
+│   └── sql/
+├── middleware/
+├── routes/
+├── services/
+├── uploads/
+├── utils/
+├── .env
+├── app.js
+├── server.js
+├── package.json
+├── Postman_collection.json
+└──  Postman_environment.json
+
+For any issue regarding the project please contact - 
+ Aditya Kumar
+ 7895085968
+ adityakumar.9c@gmail.com
