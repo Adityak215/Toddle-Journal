@@ -1,0 +1,511 @@
+{
+	"info": {
+		"_postman_id": "caf12462-525e-4a0d-97ac-1541b4114683",
+		"name": "Toddle Journal Live",
+		"description": "Live API collection for Toddle Journal App deployed on Render",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44996113",
+		"_collection_link": "https://aditya-6652307.postman.co/workspace/db4e9dd0-571b-4ce4-893c-b8d2f834203a/collection/44996113-caf12462-525e-4a0d-97ac-1541b4114683?action=share&source=collection_link&creator=44996113"
+	},
+	"item": [
+		{
+			"name": "Teacher Operations",
+			"item": [
+				{
+					"name": "Teacher Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"liveteacher1\",\n    \"password\": \"password123\",\n    \"role\": \"teacher\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teacher Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    pm.environment.set(\"liveTeacherToken\", jsonData.token);",
+									"    console.log('Teacher token saved:', jsonData.token.substring(0, 10) + '...');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"liveteacher1\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Journal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Log entire response for debugging",
+									"console.log('Response status:', pm.response.code);",
+									"console.log('Response body:', pm.response.text());",
+									"",
+									"if (pm.response.code === 201) {",
+									"    try {",
+									"        const jsonData = pm.response.json();",
+									"        ",
+									"        // Handle different response structures",
+									"        let journalId;",
+									"        ",
+									"        if (jsonData.journal && jsonData.journal.id) {",
+									"            journalId = jsonData.journal.id;",
+									"        } else if (jsonData.id) {",
+									"            journalId = jsonData.id;",
+									"        } else if (jsonData.data && jsonData.data.id) {",
+									"            journalId = jsonData.data.id;",
+									"        }",
+									"        ",
+									"        if (journalId) {",
+									"            pm.environment.set(\"journalId\", journalId);",
+									"            console.log('Saved journal ID:', journalId);",
+									"        } else {",
+									"            console.error('Could not find journal ID in response');",
+									"            console.log('Response structure:', JSON.stringify(jsonData));",
+									"        }",
+									"    } catch (error) {",
+									"        console.error('Error parsing response:', error);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{liveTeacherToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"Live Test Journal Entry\",\n    \"student_ids\": [1],\n    \"published_at\": \"2025-05-16T12:00:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/journals",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"journals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Journal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.log('Current journal ID from env:', pm.environment.get('journalId'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{liveTeacherToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/journals/{{journalId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"journals",
+								"{{journalId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Journal",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{liveTeacherToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"Updated Live Journal Entry\",\n    \"student_ids\": [1, 2]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/journals/{{journalId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"journals",
+								"{{journalId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Journal",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{liveTeacherToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/journals/{{journalId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"journals",
+								"{{journalId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Publish Journal",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{liveTeacherToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/journals/{{journalId}}/publish",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"journals",
+								"{{journalId}}",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Attachment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{liveTeacherToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "attachment_type",
+									"value": "pdf",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/Acer/Downloads/Quick Share/[04] Backend Task.pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/journals/{{journalId}}/attachment",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"journals",
+								"{{journalId}}",
+								"attachment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teacher Journal Feed",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{liveTeacherToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/journals/feed?page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"journals",
+								"feed"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Student Operations",
+			"item": [
+				{
+					"name": "Student Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"livestudent1\",\n    \"password\": \"password123\",\n    \"role\": \"student\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Student Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    pm.environment.set(\"liveStudentToken\", jsonData.token);",
+									"    console.log('Student token saved:', jsonData.token.substring(0, 10) + '...');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"livestudent1\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Student Journal Feed",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{liveStudentToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/journals/feed?page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"journals",
+								"feed"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"exec": [
+					"// Check if journalId exists and is valid",
+					"const journalId = pm.environment.get('journalId');",
+					"if (!journalId || isNaN(journalId)) {",
+					"    console.warn('Warning: Invalid or missing journalId. Please create a journal first.');",
+					"}"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://toddle-journal-4ei4.onrender.com/api",
+			"type": "string"
+		}
+	]
+}
