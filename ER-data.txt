@@ -1,0 +1,45 @@
++----------------+       +----------------+       +---------------------+
+|     users      |       |    journals    |       |  attachment_types   |
++----------------+       +----------------+       +---------------------+
+| id (PK)        |<---+ | id (PK)        |       | id (PK)            |
+| username       |    | | teacher_id (FK)|       | name (ENUM)        |
+| password       |    | | description    |       +---------------------+
+| role (ENUM)    |    | | published_at   |                 ^
+| created_at     |    | | created_at     |                 |
+| updated_at     |    | | updated_at     |                 |
++----------------+    | +----------------+                 |
+                      |                                    |
+                      |                                    |
++---------------------+    +----------------+       +---------------------+
+| student_journal_tags|    |  attachments   |       |    notifications    |
++---------------------+    +----------------+       +---------------------+
+| id (PK)            |    | id (PK)        |       | id (PK)            |
+| journal_id (FK)    |    | journal_id (FK)|       | student_id (FK)    |
+| student_id (FK)    |    | attachment_type|       | journal_id (FK)    |
+| notification_sent  |    | _id (FK)       |       | read               |
+| created_at         |    | file_path      |       | created_at         |
++---------------------+    | created_at     |       +---------------------+
+                           +----------------+
+
+
+Key Relationships:
+
+1. users - journals (One-to-Many)
+    - A teacher ( role='teacher' ) can create multiple journals.
+    - journals.teacher_id references users.id.
+
+2. journals - attachments (One-to-Many)
+    -  A journal can have multiple attachments.
+    - attachments.journal_id references journals.id .
+
+3. attachment_types -> attachments (One-to-Many)
+    - Each attachment has one type (image/video/pdf/url).
+    - attachments.attachment_type_id references attachment_types.id.
+
+4. journals + users -> student journal_tags (Many-to-Many)
+    - Journals can be tagged to multiple students ( role=' student' ).
+    - Composite foreign keys: (journal_id, student_id)
+
+5. users + journals - notifications (One-to-Many)
+    - Notifications link students to journals.
+    - notifications.student_id and notifications.journal_id are foreign keys.
